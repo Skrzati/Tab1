@@ -1,4 +1,4 @@
-package pl.upsanok.tablab1excercise.controllers.dto;
+package pl.upsanok.tablab1excercise.models.dto;
 
 import lombok.Builder;
 
