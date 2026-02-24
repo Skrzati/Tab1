@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import pl.upsanok.tablab1excercise.models.FlowerEntity;
 import pl.upsanok.tablab1excercise.models.dto.Flower;
 import pl.upsanok.tablab1excercise.service.FlowersService;
+
+import java.util.List;
 
 @RestController()
 @CrossOrigin(origins = {"http://localhost:3000", "https://tab-front-production.up.railway.app"})
@@ -20,6 +23,12 @@ public class FlowersImprovedController {
 
   @Autowired
   private FlowersService flowersService;
+
+    @GetMapping("flowers")
+    public ResponseEntity<List<Flower>> getAllFlowers() {
+        List<Flower> flowers = flowersService.getAllFlowers();
+        return ResponseEntity.ok(flowers);
+    }
 
   @GetMapping("flowers/fav/users/{userName}")
   public ResponseEntity<Flower> getFavForUser(
@@ -34,7 +43,7 @@ public class FlowersImprovedController {
       @PathVariable String userName,
       @RequestBody Flower flower
   ) {
-    boolean result = flowersService.saveFavouriteFlowerFor(userName, flower.name());
+      boolean result = flowersService.saveFavouriteFlowerFor(userName, flower.name());
     return ResponseEntity.ok(Flower.builder().name("testowa").build());
   }
 }
