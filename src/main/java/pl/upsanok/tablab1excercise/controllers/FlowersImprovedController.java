@@ -21,8 +21,8 @@ import java.util.List;
 @AllArgsConstructor
 public class FlowersImprovedController {
 
-  @Autowired
-  private FlowersService flowersService;
+    @Autowired
+    private FlowersService flowersService;
 
     @GetMapping("flowers")
     public ResponseEntity<List<Flower>> getAllFlowers() {
@@ -30,21 +30,27 @@ public class FlowersImprovedController {
         return ResponseEntity.ok(flowers);
     }
 
-  @GetMapping("flowers/fav/users/{userName}")
-  public ResponseEntity<Flower> getFavForUser(
-      @PathVariable String userName
-  ) {
-    var result = flowersService.getFavouriteFlowerForUser(userName);
-    return ResponseEntity.ok(result);
-  }
+    @GetMapping("users/{userName}/garden")
+    public ResponseEntity<List<Flower>> getGarden(@PathVariable String userName) {
+        return null;
+    }
 
-  @PostMapping("flowers/fav/users/{userName}")
-  public ResponseEntity<Flower> setNewFavForUser(
-      @PathVariable String userName,
-      @RequestBody Flower flower
-  ) {
-      boolean result = flowersService.saveFavouriteFlowerFor(userName, flower.name());
-    return ResponseEntity.ok(Flower.builder().name("testowa").build());
-  }
+    @GetMapping("flowers/fav/users/{userName}")
+    public ResponseEntity<Flower> getFavForUser(
+            @PathVariable String userName
+    ) {
+        var result = flowersService.getFavouriteFlowerForUser(userName);
+        return ResponseEntity.ok(result);
+    }
+
+
+    @PostMapping("flowers/fav/users/{userName}")
+    public ResponseEntity<Flower> setNewFavForUser(
+            @PathVariable String userName,
+            @RequestBody Flower flower
+    ) {
+        boolean result = flowersService.saveFavouriteFlowerFor(userName, flower.name());
+        return ResponseEntity.ok(Flower.builder().name("testowa").build());
+    }
 }
 
