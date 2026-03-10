@@ -14,11 +14,11 @@ import pl.upsanok.tablab1excercise.models.dto.Flower;
 @IdClass(GardenId.class)
 public class Garden {
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "flower_id")
     private FlowerEntity flower;
 

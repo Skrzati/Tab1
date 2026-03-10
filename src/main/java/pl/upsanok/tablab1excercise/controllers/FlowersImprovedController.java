@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.upsanok.tablab1excercise.models.FlowerEntity;
 import pl.upsanok.tablab1excercise.models.dto.Flower;
 import pl.upsanok.tablab1excercise.service.FlowersService;
+import pl.upsanok.tablab1excercise.service.GardenService;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ public class FlowersImprovedController {
 
     @Autowired
     private FlowersService flowersService;
+    private GardenService gardenService;
 
     @GetMapping("flowers")
     public ResponseEntity<List<Flower>> getAllFlowers() {
@@ -32,7 +33,8 @@ public class FlowersImprovedController {
 
     @GetMapping("users/{userName}/garden")
     public ResponseEntity<List<Flower>> getGarden(@PathVariable String userName) {
-        return null;
+        List<Flower> flowers = gardenService.getGardenOrUser(userName) ;
+        return ResponseEntity.ok(flowers);
     }
 
     @GetMapping("flowers/fav/users/{userName}")
@@ -42,7 +44,10 @@ public class FlowersImprovedController {
         var result = flowersService.getFavouriteFlowerForUser(userName);
         return ResponseEntity.ok(result);
     }
-
+    @PostMapping("users/{userName}/garden/flowers/{flowerName}")
+    public boolean addFlowerInGarden(@PathVariable String userName, @PathVariable String flowerName) {
+        return gardenService.saveFlowerInGardenForUser(userName, flowerName);
+    }
 
     @PostMapping("flowers/fav/users/{userName}")
     public ResponseEntity<Flower> setNewFavForUser(

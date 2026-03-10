@@ -2,7 +2,6 @@ package pl.upsanok.tablab1excercise.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.upsanok.tablab1excercise.models.dto.Flower;
 
 @Entity
 @Table(name = "user_table")
@@ -22,7 +21,7 @@ public class User {
 
 //    @Column(name = "flower_id")
 //    private Integer flowerId;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "flower_id" )
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "flower_id", nullable = true)
     private FlowerEntity flowerEntity;
 }

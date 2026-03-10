@@ -29,33 +29,27 @@ public class FlowersService {
     }
 
     public Flower getFavouriteFlowerForUser(String userName) {
-//        return userRepository.findByName(userName)
-//                .map(User::getFlowerId)
-//                .flatMap(flowerRepository::findById)
-//                .map(entity -> Flower.builder().name(entity.getFlowerName()).build())
-//                .orElse(Flower.builder().name("").build());
-        List<User> allUsers =  userRepository.findAll();
-        for (User user : allUsers) {
-            if (user.getName().equals(userName)) {
-                return Flower.builder().name(user.getFlowerEntity().getFlowerName()).build();
-            }
-        }
-        return Flower.builder().name("").build();
+        return userRepository.findAll().stream()
+                .filter(user -> user.getName().equals(userName))
+                .findFirst()
+                .map(user -> {
+                    if (user.getFlowerEntity() == null) {
+                        return Flower.builder().name("").build();
+                    }
+                    return Flower.builder().name(user.getFlowerEntity().getFlowerName()).build();
+                })
+                .orElse(Flower.builder().name("").build());
     }
 
-
     public boolean saveFavouriteFlowerFor(String userName, String flowerName) {
-//        FlowerEntity flower = flowerRepository.findByFlowerName(flowerName)
-//                .orElseThrow(() -> new RuntimeException("Flower not found"));
-//        User user = userRepository.findByName(userName)
-//                .orElse(User.builder().name(userName).build());
-//
-//        user.setFlowerId(flower.getId());
-//        userRepository.save(user);
-//        return true;
-        FlowerEntity flower = flowerRepository.findByFlowerName(flowerName)
+        FlowerEntity flower = flowerRepository.findAll().stream()
+                .filter(f -> f.getFlowerName().equals(flowerName))
+                .findFirst()
                 .orElseThrow(() -> new RuntimeException("Flower not found"));
-        User user = userRepository.findByName(userName)
+
+        User user = userRepository.findAll().stream()
+                .filter(u -> u.getName().equals(userName))
+                .findFirst()
                 .orElse(User.builder().name(userName).build());
 
         user.setFlowerEntity(flower);
