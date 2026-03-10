@@ -4,14 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.upsanok.tablab1excercise.models.FlowerEntity;
-import pl.upsanok.tablab1excercise.models.Garden;
-import pl.upsanok.tablab1excercise.models.GardenIdEmbedded;
 import pl.upsanok.tablab1excercise.models.User;
 import pl.upsanok.tablab1excercise.models.dto.Flower;
 import pl.upsanok.tablab1excercise.repositories.FlowerRepository;
 import pl.upsanok.tablab1excercise.repositories.GardenRepository;
 import pl.upsanok.tablab1excercise.repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,30 +32,32 @@ public class GardenService {
     }
     @Transactional
     public boolean saveFlowerInGardenForUser(String userName, String flowerName) {
-        User user = userRepository.findAll().stream()
-                .filter(u -> u.getName().equals(userName))
-                .findFirst()
-                .orElseGet(() -> userRepository.save(User.builder().name(userName).build()));
-
-        FlowerEntity flower = flowerRepository.findAll().stream()
+        FlowerEntity flowerEntity = flowerRepository.findAll().stream()
                 .filter(f -> f.getFlowerName().equals(flowerName))
                 .findFirst()
                 .orElse(null);
 
-        if (flower == null) {
+        if (flowerEntity == null) {
             return false;
         }
 
-        Garden garden = Garden.builder()
-                .gardenIdEmbedded(GardenIdEmbedded.builder()
-                        .user(user.getId())
-                        .flower(flower.getId())
-                        .build())
-                .user(user)
-                .flower(flower)
-                .build();
 
-        gardenRepository.save(garden);
+        User userEntity = userRepository.findAll().stream()
+                .filter(u -> u.getName().equals(userName))
+                .findFirst()
+                .orElseGet(() -> User.builder()
+                        .name(userName)
+                        .flowerInGarden(new ArrayList<>())
+                        .build());
+
+        List<FlowerEntity> flowersInGarden = userEntity.getFlowerInGarden() != null
+                ? userEntity.getFlowerInGarden()
+                : new ArrayList<>();
+
+        flowersInGarden.add(flowerEntity);
+        userEntity.setFlowerInGarden(flowersInGarden);
+
+        userRepository.save(userEntity);
         return true;
     }
 

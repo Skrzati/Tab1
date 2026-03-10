@@ -3,6 +3,8 @@ package pl.upsanok.tablab1excercise.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "user_table")
 @NoArgsConstructor
@@ -19,9 +21,15 @@ public class User {
     @Column(name = "user_name")
     private String name;
 
-//    @Column(name = "flower_id")
-//    private Integer flowerId;
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "flower_id", nullable = true)
     private FlowerEntity flowerEntity;
+
+    @ManyToMany
+    @JoinTable(
+            name = "garden_table",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "flower_id")
+    )
+    private List<FlowerEntity> flowerInGarden;
 }
