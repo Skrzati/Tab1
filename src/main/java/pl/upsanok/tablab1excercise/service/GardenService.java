@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.upsanok.tablab1excercise.models.FlowerEntity;
 import pl.upsanok.tablab1excercise.models.Garden;
+import pl.upsanok.tablab1excercise.models.GardenIdEmbedded;
 import pl.upsanok.tablab1excercise.models.User;
 import pl.upsanok.tablab1excercise.models.dto.Flower;
 import pl.upsanok.tablab1excercise.repositories.FlowerRepository;
@@ -47,6 +48,10 @@ public class GardenService {
         }
 
         Garden garden = Garden.builder()
+                .gardenIdEmbedded(GardenIdEmbedded.builder()
+                        .user(user.getId())
+                        .flower(flower.getId())
+                        .build())
                 .user(user)
                 .flower(flower)
                 .build();

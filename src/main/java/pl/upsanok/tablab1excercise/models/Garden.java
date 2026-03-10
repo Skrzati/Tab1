@@ -2,7 +2,6 @@ package pl.upsanok.tablab1excercise.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.upsanok.tablab1excercise.models.dto.Flower;
 
 @Entity
 @Table(name = "garden_table")
@@ -11,15 +10,19 @@ import pl.upsanok.tablab1excercise.models.dto.Flower;
 @NoArgsConstructor
 @Getter
 @Setter
-@IdClass(GardenId.class)
 public class Garden {
-    @Id
+
+    @EmbeddedId
+    private GardenIdEmbedded gardenIdEmbedded;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
-    @Id
-    @ManyToOne(fetch = FetchType.EAGER)
+    @MapsId("flower")
     @JoinColumn(name = "flower_id")
     private FlowerEntity flower;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @MapsId("user")
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
